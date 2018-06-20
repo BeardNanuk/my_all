@@ -1,0 +1,122 @@
+#! /user/bin/bash
+
+website: 
+\bash
+
+https://geodynamics.org/cig/software/specfem2d/
+
+#Current Stable Release
+#To obtain the latest stable release of the code, use the following git command:
+
+git clone --recursive https://github.com/geodynamics/specfem2d.git
+
+# then change to the spcfem2d diretorary 
+. sp2D
+
+#module available on this local machine
+module avail
+#module currently loaded in this terminal 
+module list 
+#load a module 
+module load MODULE
+#load openmpi
+module load openmpi/intel-18.0/3.0.0/64
+#load intel mpi
+module load intel/18.0/64/18.0.2.199
+#my quick way to load the above two moduels 
+. spenv
+
+
+
+# to generate a Makefile for installation later 
+# many flags will be automatically generated because when FC = ifort is seleted
+./configure FC=ifort --with-mpi
+
+# install specfem2D in parallel 
+make -j
+#at this point, the specfem supposed to be installed.
+
+# To check if specfem2D exactuatable is already there in /bin
+ls bin
+#(xspecfem2D and xmeshfem2D supposed to be already in it)
+
+
+
+
+
+########## run specfem
+## input (Par_file for all parameter setup,SOURCE is the source function)
+vi DATA/Par_file
+# set the number of processors, for meshing?
+# parameters concerning partitioning
+NPROC                           = 5              # number of processes
+# using mpi to run with the multiple  processors
+mpirun -n 4 ./bin/xspecfem2D
+
+########### example 1 
+azeh@paris specfem2d]$ vi DATA/Par_file 
+[jiazeh@paris specfem2d]$ vi EXAMPLES/simple_topography_and_also_a_simple_fluid_layer/DATA/
+interfaces_simple_topo_curved.dat  interfaces_simple_topo_flat.dat    Par_file                           SOURCE
+[jiazeh@paris specfem2d]$ vi EXAMPLES/simple_topography_and_also_a_simple_fluid_layer/DATA/interfaces_simple_topo_curved.dat 
+[jiazeh@paris specfem2d]$ vi DATA/Par_file 
+[jiazeh@paris specfem2d]$ vi EXAMPLES/simple_topography_and_also_a_simple_fluid_layer/DATA/interfaces_simple_topo_curved.dat 
+[jiazeh@paris specfem2d]$ vi DATA/Par_file 
+[jiazeh@paris specfem2d]$ ./bin/xmeshfem2D 
+
+
+
+#Etienne:Launch_specfem.sh creation 
+#!/bin/sh
+
+
+rm output*
+
+./bin/xmeshfem2D >> output_mesher
+
+NPROC=4
+
+mpirun -n $NPROC ./bin/xspecfem2D >> output_solver
+
+## how to use this thing
+# make it excutable 
+chmod u+x launch_specfem.sh
+#run it 
+./launch_specfem.sh
+#my quick way of launching 'launch_spefem.sh'
+#(after switch folder using .sp2D, and then load modules using .spenv)
+l2d
+
+# display the output for mesher 
+cat output_mesher
+# display the output for solver
+cat output_solver
+  
+# how to find if something exits
+grep 'gridfile.gnu' ./src/*/*
+
+#### source setup 
+#-----------------------------------------------------------------------------
+#
+# sources
+#
+#-----------------------------------------------------------------------------
+
+# source parameters
+NSOURCES                        = 1              # number of sources (source information is then read from the DATA/SOURCE file)
+force_normal_to_surface         = .false.        # angleforce normal to surface (external mesh and curve file needed)
+## the real source file is located at: 
+DATA/SOURCE
+
+#open a folder in gui when in command line
+nautilus /foopath
+
+# remove fils and subfolders without delete the root folder
+rm -rf del_content/*
+
+
+
+
+
+
+
+
