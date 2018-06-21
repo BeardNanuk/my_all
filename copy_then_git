@@ -4,6 +4,8 @@
 
 cp -r ../my_* . 
 
+wait
+
 git add .
 git commit -m "3rd commit"
 git push -u github master
