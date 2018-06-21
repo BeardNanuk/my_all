@@ -1137,6 +1137,21 @@ print(sys.argv[1])
 quicktry_python
 try2
 
+# print current directory 
+import os
+print(os.getcwd())
+# change current directory 
+os.chdir('foo/path/')
+# make dirs 
+os.makedirs('foo/path/folder2')
+# remove dirs
+os.removedirs('foo/path/folder2')
+# rename 
+os.rename('oldfilename.txt','newfilename.txt')
+#
+
+
+
 
 
 

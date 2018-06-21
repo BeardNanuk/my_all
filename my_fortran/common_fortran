@@ -1,0 +1,45 @@
+#!/bin/sh
+
+# common fortran 
+
+! floating point number
+
+real :: rho_s = 2.7 ! units 
+! square 
+v = D**2/(19*n)
+! print to the screen
+print *, v
+!output
+gfortran foofilename.f90 -o barcompliedfile
+
+### program structure
+
+program fretcalc !program name 
+  implicit none
+  real :: scale_length = 25.5 ! [inches]
+  integer :: total_frets = 24
+  real :: fconst = 2.0**(1.0/12.0)
+  
+  do fret=1,total_frets
+    print *, fret, scale_length/(fconst**fret)
+  end do
+
+ 
+
+end program fretcalc
+
+
+### output formatting 
+
+! set the format label 100, 3 blocks long, 5 spaces in between, 5-digit scientific, 2 decimal accuracy
+
+  100 format (i3, 5x, f5.2)
+! create a file 
+  open(unit=, file='frets.dat')
+
+
+
+
+
+
+Mon Jun 11 17:03:06 UTC 2018

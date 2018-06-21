@@ -94,6 +94,10 @@ cat output_solver
 # how to find if something exits
 grep 'gridfile.gnu' ./src/*/*
 
+################### understanding ##################
+
+
+
 #### source setup 
 #-----------------------------------------------------------------------------
 #
@@ -113,10 +117,94 @@ nautilus /foopath
 # remove fils and subfolders without delete the root folder
 rm -rf del_content/*
 
+### output mesh files of proc0000*(x,z,vp)[in Parfile]
+56:SAVE_MODEL                      = binary
+
+##  
+
+#-----------------------------------------------------------------------------
+#
+# receivers
+#
+#-----------------------------------------------------------------------------
+
+# receiver set parameters for recording stations (i.e. recording points)
+seismotype                      = 1              # record 1=displ 2=veloc 3=accel 4=pressure 5=curl of displ 6=the fluid potential
+
+# subsampling of the seismograms to create smaller files (but less accurately sampled in time)
+subsamp_seismos                 = 1
+
+# so far, this option can only be used if all the receivers are in acoustic elements
+USE_TRICK_FOR_BETTER_PRESSURE   = .true.
+#!!!! this is only work if seismotype is 4!!!!
+
+########## number of medium to include in Par_file
+277:nbregions                       = 1 
+
+
+# output vect0000005
+#### for PostScript snapshots ####
+output_postscript_snapshot      = .false.         # output Postscript snapshot of the results every NSTEP=1090
+
+# output AA.S000000.PRE.semp  AA.S000017.PRE.semp 
+SU_FORMAT                       = .false.        # output single precision binary seismograms in Seismic Unix format (adjoint traces will be read in the same format)
+# Up_file_single.su or Up_file_double.su depends on 
+# seismogram formats
+save_ASCII_seismograms          = .true.         # save seismograms in ASCII format or not
+##! I think the above only happen when SU_FORMAT turn to false
+save_binary_seismograms_single  = .false.         # save seismograms in single precision binary format or not (can be used jointly with ASCII above to save both)
+save_binary_seismograms_double  = .false.        # save seismograms in double precision binary format or not (can be used jointly with both flags above to save all)
 
 
 
 
+
+
+
+
+
+
+############# common errors ##################
+
+./launch_specfem.sh: line 10: 13884 Segmentation fault      (core dumped) mpirun -n $NPROC /home/jiazeh/specfem2d/bin/xspecfem2D >> solverz
+# default error, no problem. 
+
+opening file failed, please check your file path and run-directory.
+ error opening Par_file
+ Error detected, aborting MPI... proc            0
+forrtl: No such file or directory
+forrtl: severe (29): file not found, unit 30, file /home/jiazeh/specfem2d/bin/./OUTPUT_FILES//error_message000000.txt
+Image              PC                Routine            Line        Source             
+xmeshfem2D         000000000045DE6E  for__io_return        Unknown  Unknown
+xmeshfem2D         0000000000475075  for_open              Unknown  Unknown
+xmeshfem2D         0000000000440168  Unknown               Unknown  Unknown
+xmeshfem2D         000000000043FF69  Unknown               Unknown  Unknown
+xmeshfem2D         0000000000441355  Unknown               Unknown  Unknown
+xmeshfem2D         000000000043B749  Unknown               Unknown  Unknown
+xmeshfem2D         0000000000409C9E  Unknown               Unknown  Unknown
+libc-2.17.so       00007FDEBB4313D5  __libc_start_main     Unknown  Unknown
+xmeshfem2D         0000000000409BA9  Unknown               Unknown  Unknown
+# need to create OUTPUT folder manully 
+
+######## need to run 
+/home/jiazeh/specfem2d/bin/xmeshfem2D >> mesherz 
+####### each time before run 
+NPROC=4
+
+mpirun -n $NPROC /home/jiazeh/specfem2d/bin/xspecfem2D >> solverz
+
+### the detailed errors are in mesherz and solverz
+
+### Parfile could have 44444444444444... check always
+ **********************************************
+ *** Specfem 2-D Mesher - MPI version       ***
+ **********************************************
+ 
+ Running Git version of the code corresponding to 
+ commit 127ce505f597868b4baed17b9b9da9271abf980d
+ dating From Date:   Fri Jun 1 11:27:20 2018 -0400
+ 
+ Reading the parameter file...
 
 
 
