@@ -2,7 +2,7 @@
 
 ## copy all my code to my_all then update github 
 
-cp -r ../my_* . 
+cp -rf ../my_* . 
 
 wait
 
