@@ -7,7 +7,7 @@ cp -rf ../my_* .
 wait
 
 git add .
-git commit -m "8th commit"
+git commit -m "9th commit"
 git push -u github master
 
 
