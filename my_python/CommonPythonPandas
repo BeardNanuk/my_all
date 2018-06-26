@@ -234,6 +234,31 @@ plt.plot(x, norm.pdf(x))
 plt.plot(x, norm.pdf(x, 1.0, 0.5))
 plt.savefig('C:\\Users\\Frank\\MyPlot.png', format='png')
 
+# axis setup 
+
+fig = plt.figure(figsize=(FIGSIZE_X,FIGSIZE_y))
+ax = fig.add_subplot(1, 1, 1)
+
+
+#plt.plot(data[:,0],'-')
+plt.plot(data[:,0], data[:,1],'r-',linewidth=LINE_WITDH_SOLID)
+#plt.xlabel(LABEL_X,fontsize=FONTSIZE_LABEL)
+#plt.ylabel(LABEL_Y,fontsize=FONTSIZE_LABEL)
+
+
+ax.set_xlabel(LABEL_X,fontsize=FONTSIZE_LABEL)
+ax.set_ylabel(LABEL_Y,fontsize=FONTSIZE_LABEL)
+
+#ax.yaxis.get_offset_text().set_fontsize(60)
+#ax.xaxis.get_major_ticks.label.set_fontsize(60)
+ax.tick_params(direction='out', length=6, width=2, colors='r',
+               grid_color='r', grid_alpha=0.5)
+
+
+plt.savefig('AA.S000003.png', format='png')
+plt.show()
+
+
 
 ############################################################ MatPlotLib Basics #####
 

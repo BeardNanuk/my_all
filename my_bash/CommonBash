@@ -421,6 +421,7 @@ Nevent=$(sed -n 17,19p ./parameters.py | grep 'NSRC' | cut -d\= -f2 | sed 's/\#.
 # formatted numbering and string
 Nit=4 
 ztemp=$(printf "tin%04d" $Nit)
+# two variables in a string for filename 
 
 
 
@@ -455,6 +456,18 @@ if [ -d "$LINK_OR_DIR" ]; then
 fi
 
 ##
+
+#### data format 
+## convert float to integer
+(obspy) [jiazeh@paris specfem2d]$ echo $f0
+100000.0
+(obspy) [jiazeh@paris specfem2d]$ intf0=${f0%.*}
+(obspy) [jiazeh@paris specfem2d]$ echo $f0
+100000.0
+(obspy) [jiazeh@paris specfem2d]$ echo $intf0
+100000
+
+
 
 
 

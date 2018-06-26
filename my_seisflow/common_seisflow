@@ -57,7 +57,16 @@ do iproc=1,NPROC
   open(unit=14,file=filename,status='old',form='unformatted')
   write(filename,'(a,i6.6,a)') './mask/proc',iproc-1,'_vp.bin'
   open(unit=154,file=filename,status='unknown',form='unformatted')
-# to create the masking by inputing the proc _x _z _vp files in the mask folder, which were genereted by specfem2d
+# to create the masking in seisflow, by inputing the proc _x _z _vp files in the mask folder, which were genereted by specfem2d (note that vp map was used only to obtain the masking in the specfem2d-generated mesh)
+# so copy the following to /home/jiazeh/inversion_test/mask would be enough for seisflow 
+(obspy) [jiazeh@paris DATA]$ cp proc000000_x.bin /home/jiazeh/inversion_test/mask
+(obspy) [jiazeh@paris DATA]$ cp proc000000_z.bin /home/jiazeh/inversion_test/mask
+(obspy) [jiazeh@paris DATA]$ cp proc000000_vp.bin /home/jiazeh/inversion_test/mask
+
+
+
+
+
  
 
 
@@ -151,7 +160,7 @@ Generating synthetics
  task 03 of 04
  task 04 of 04
 
-Computing gradient
+omputing gradient
  task 01 of 04
  task 02 of 04
  task 03 of 04
@@ -313,6 +322,134 @@ cat output/
 cat output.stats/
 # display the misfit 
 cat output.stats/misfit 
+
+
+### common errors 
+
+## the blowout eror 
+/home/jiazeh/seisflows/seisflows/optimize/base.py:161: RuntimeWarning: divide by zero encountered in double_scalars
+  PAR.STEPLENMAX*norm_m/norm_p
+/home/jiazeh/seisflows/seisflows/plugins/line_search/bracket.py:31: RuntimeWarning: divide by zero encountered in double_scalars
+  alpha = gtg[-1]**-1
+/home/jiazeh/seisflows/seisflows/optimize/base.py:168: RuntimeWarning: divide by zero encountered in double_scalars
+  alpha = PAR.STEPLENINIT*norm_m/norm_p
+/home/jiazeh/seisflows/seisflows/optimize/base.py:172: RuntimeWarning: invalid value encountered in multiply
+  self.save('m_try', m + alpha*p)
+ trial step 1
+ task 01 of 04
+ task 02 of 04
+ task 03 of 04
+ task 04 of 04
+forrtl: error (65): floating invalid
+Image              PC                Routine            Line        Source             
+xspecfem2D         000000000065A69E  for__signal_handl     Unknown  Unknown
+libpthread-2.17.s  00007F811F5C0680  Unknown               Unknown  Unknown
+xspecfem2D         00000000004D764D  Unknown               Unknown  Unknown
+xspecfem2D         0000000000560AA0  Unknown               Unknown  Unknown
+xspecfem2D         00000000005D99B3  Unknown               Unknown  Unknown
+xspecfem2D         0000000000409D5E  Unknown               Unknown  Unknown
+libc-2.17.so       00007F811F2063D5  __libc_start_main     Unknown  Unknown
+xspecfem2D         0000000000409C69  Unknown               Unknown  Unknown
+.
+.
+.
+SOLVER FAILED
+
+    Nonzero exit status returned by:   bin/xspecfem2D
+
+    Subsequent tasks may fail because expected solver output is not in place.
+    Users running on clusters without fault tolerance should consider stopping 
+    any remaining workflow tasks to avoid further loss of resources. 
+
+    To troubleshoot solver errors, navigate to ./scratch/solver to browse solver
+    output or try running solver manually in the directories set up in
+    ./scratch/solver.
+# also the obs/syn data looks exactly the same 
+
+## causes: 
+# in inversion_test/specfem2d/Par_file
+ 47 # available models
+ 48 #   default: define model using nbmodels below
+ 49 #   ascii: read model from ascii database file
+ 50 #   binary: read model from binary databse file
+ 51 #   external: define model using define_external_model subroutine
+ 52 #   legacy: read model from model_velocity.dat_input
+ 53 MODEL                           = binary
+ 54 
+ 55 # Output the model with the requested type, does not save if turn to default
+ 56 SAVE_MODEL                      = default
+ 57 
+### the above MODEL set to binary, meaning it uses the binary files in folder model_init
+### and in folder model_true 
+
+## solution to blowup error
+#rerun specfem2d twice 
+# with DATA/Par_file
+ 47 # available models
+ 48 #   default: define model using nbmodels below
+ 49 #   ascii: read model from ascii database file
+ 50 #   binary: read model from binary databse file
+ 51 #   external: define model using define_external_model subroutine
+ 52 #   legacy: read model from model_velocity.dat_input
+ 53 MODEL                           = default
+ 54 
+ 55 # Output the model with the requested type, does not save if turn to default
+ 56 SAVE_MODEL                      = binary
+### the above MODEL set to default, it will use specfem2d's internal mesher to generate 
+### meshed bin files: 
+./DATA/proc000000_jacobian.bin     ./DATA/proc000000_vp.bin  ./DATA/proc000000_z.bin
+./DATA/proc000000_NSPEC_ibool.bin  ./DATA/proc000000_vs.bin
+./DATA/proc000000_rho.bin          ./DATA/proc000000_x.bin
+### Generate these bin files twice in specfem2d, for model_init in inversion_test/ one with 
+275 # define the different regions of the model in the (nx,nz) spectral-element mesh
+276 # format of each line: nxmin nxmax nzmin nzmax material_number
+277 nbregions                       = 1
+278 1 80  1 80 1
+### for model_init in inversion_test/, the other of nbregions should be set to the number of regions you want to define 
+ons of the model in the (nx,nz) spectral-element mesh
+276 # format of each line: nxmin nxmax nzmin nzmax material_number
+277 nbregions                       = 8
+278 1 80  1 80 1
+279 32 57 26 56  2
+280 22 25 54 57  3
+281 24 26 17 23  4
+282 32 46 32 34  5
+283 11 17 57 63  5
+284 14 17 20 25  4
+285 25 27 22 27  3
+286 35 38 21 26  2
+287 17 22 30 35  4
+288 23 29 15 17  2
+289 35 37 10 13  4
+290 27 30 30 35  5
+
+### then copy these files seperately into model_inti and model_true, respectively 
+## check inversion_test/specfem2d/Parfile 
+ 53 MODEL                           = binary
+## and then in this case,  in inversion_test/specfem2d/Parfile, 
+275 # define the different regions of the model in the (nx,nz) spectral-element mesh
+276 # format of each line: nxmin nxmax nzmin nzmax material_number
+277 nbregions                       = 11
+278 1 80  1 80 1
+279 32 57 26 56  2
+280 22 25 54 57  3
+281 24 26 17 23  4
+## nbregions would not matter here. (Remember each model needs to be meshed first for seisflow
+## importing bin files generated by specfem2d is just for meshing and processor partitionning etc, so seiseisflow do not need to worry about this again)
+
+
+setup_with_binary_database = 0
+
+# available models
+#   default: define model using nbmodels below
+#   ascii: read model from ascii database file
+#   binary: read modee from binary databse file
+#   external: define m using define_external_model subroutine
+#   legacy: read model from model_velocity.dat_input
+MODEL                           = default
+
+# Output the model with the requested type, does not save if turn to default
+SAVE_MODEL                      = binary
 
 
 

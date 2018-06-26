@@ -47,9 +47,12 @@ O
 # turn on relative number mode
 RR: :set relativenumber
 RR: :66,70s/^/# 
-# turn of the first column colored 
+# turn off the first column colored 
 RR: :nohl
-
+# show line number 
+:set number 
+# turn off line number 
+:set nonumber 
 
 
 ### delete text 

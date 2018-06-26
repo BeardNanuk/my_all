@@ -31,6 +31,8 @@ module load intel/18.0/64/18.0.2.199
 # to generate a Makefile for installation later 
 # many flags will be automatically generated because when FC = ifort is seleted
 ./configure FC=ifort --with-mpi
+# make realclean
+make realclean
 
 # install specfem2D in parallel 
 make -j
@@ -41,7 +43,17 @@ ls bin
 #(xspecfem2D and xmeshfem2D supposed to be already in it)
 
 
-
+# to compile on Ubuntu machine 
+./configure FC=gfortran CC=gcc MPIFC=mpif90 MPI_INC=/usr/include/mpich
+# for solving below errors 
+## --- ##
+## MPI ##
+## --- ##
+gfortran: error: unrecognized command line option '-showme:incdirs'
+checking mpi.h usability... no
+checking mpi.h presence... no
+checking for mpi.h... no
+configure: error: MPI header not found; try setting MPI_INC.
 
 
 ########## run specfem
