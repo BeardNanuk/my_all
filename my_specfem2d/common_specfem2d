@@ -25,6 +25,10 @@ module load openmpi/intel-18.0/3.0.0/64
 module load intel/18.0/64/18.0.2.199
 #my quick way to load the above two moduels 
 . spenv
+#unload all modules 
+module purge
+
+
 
 
 
@@ -41,6 +45,10 @@ make -j
 # To check if specfem2D exactuatable is already there in /bin
 ls bin
 #(xspecfem2D and xmeshfem2D supposed to be already in it)
+
+
+# to compile on springdale with gfortran 
+./configure --with-mpi
 
 
 # to compile on Ubuntu machine 

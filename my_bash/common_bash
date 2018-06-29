@@ -285,17 +285,6 @@ $ conda activate obspy
 # close obspy
 $ conda deactivate
 
-############ set environment setup
-## default $HOME is at the following 
-cd /home/jiazeh
-## but we want to change it to another place has SSD
-# open the bashrc file
-vi ~/.bashrc
-# change HOME varibale's default value by adding the following line to ./bashrc in /home/jiazeh
-export HOME="/scratch/gpfs/jiazeh"
-# by the way, in bash '~' meams $HOME
-
-
 
 
 
