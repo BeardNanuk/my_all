@@ -64,6 +64,46 @@ do iproc=1,NPROC
 (obspy) [jiazeh@paris DATA]$ cp proc000000_vp.bin /home/jiazeh/inversion_test/mask
 
 
+################### common check list ###################################
+### system-wise 
+# load anaconda (make sure it is for python 2)
+  943  module load anaconda
+  944  module list
+## in bashrc
+module load anaconda
+#conda activate obspy
+# this is correct for cluster usage 
+source activate obspy
+
+### in specfem2d_data folder 
+SOURCE_000000...3, av_STATIONS_000000...3,STATIONS_000000...3,Par_file, interfaces
+## in model_init and model_true
+(obspy) [jiazeh@tigergpu inversion_test]$ ls model_init
+20180702_default            proc000000_Qkappa.bin  proc000000_vs.bin
+proc000000_jacobian.bin     proc000000_rho.bin     proc000000_x.bin
+proc000000_NSPEC_ibool.bin  proc000000_vp.bin      proc000000_z.bin
+## in mask 
+(obspy) [jiazeh@tigergpu inversion_test]$ ls mask/
+20180702_default  proc000000_vp.bin  proc000000_x.bin  proc000000_z.bin
+
+#### in Parfile 
+# mesh size
+# number of cores
+# time steps(not )
+# gpu mode is true or not 
+# gpu module is loaded, the heads of gpu number is included 
+# pml in gpu mode not supported yet. 
+
+#### in parameter.py
+
+ 
+
+
+#####
+
+
+
+
 
 
 
@@ -233,7 +273,7 @@ adj/ obs/ syn/
 
 
 ## other python packages to make sfsection run successfully 
-pip install --user requests lxml decorator pytz
+mpip install --user requests lxml decorator pytz
 
 ## then this will run 
 (obspy) [jiazeh@paris inversion_test]$ ./sfsection scratch/solver/000001/traces/obs/Up_file_single.su 
@@ -450,6 +490,23 @@ MODEL                           = default
 
 # Output the model with the requested type, does not save if turn to default
 SAVE_MODEL                      = binary
+
+
+
+
+############### for gpu mode working for inversion 
+
+##### change an option given by etienne, in parameters.py	
+# change 
+SYSTEM='multicore'   # serial, pbs, slurm
+# to 
+SYSTEM='tiger_sm_gpu'   # serial, pbs, slurm 
+
+##### add file 'tiger_sum_gpu.py' to 
+/scratch/gpfs/jiazeh/seisflows/seisflows/system
+
+
+
 
 
 

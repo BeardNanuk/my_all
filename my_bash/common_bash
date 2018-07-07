@@ -263,7 +263,7 @@ source venv/bin/activate
 # close 
 deactivate
 
-# installing virtualenv using python3 
+# installing virtualenv using 3 
 virtualenv -p python3 venv 
 # open 
 source venv/bin/activate 
@@ -333,10 +333,20 @@ $ cp -v fileC.txt ~-
 ### delete related 
 # delete write-protected files
 rm -fr my*  
+# be careful about the "" in the following commands
+         rm -r "$foldname_for_results_saving_remote"
 
 
 
 ### search related 
+#print the full path of a file
+readlink -f filename 
+# find a folder size 
+(obspy) [jiazeh@tigergpu ~]$ du -sh specfem3d
+15G	specfem3d
+(obspy) [jiazeh@tigergpu ~]$ 
+
+
 #add date and time to the end of a file 
 $ date >> common_vim
 
