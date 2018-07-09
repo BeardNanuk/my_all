@@ -1,6 +1,6 @@
 #!/bin/bash
 
-ssh -Y jiazeh@tigergpu
+ssh -Y jiazeh@tigercpu
 
 
 

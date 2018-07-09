@@ -87,11 +87,14 @@ for i, filename in enumerate(filenames):
         v = _read(filename)
 	#w = v[1:-1]
 	w = v
-	print w
-	print type(w)
+        w_undersamp = w[::25]
+        x_undersamp = x[::25]
+        z_undersamp = z[::25]
+	#print w
+	#print type(w)
 	print 'shape of w', w.shape 
-
-	f, p = meshplot(x, z, w)
+        print 'shape of w undersampled :', w_undersamp.shape 
+	f, p = meshplot(x_undersamp, z_undersamp, w_undersamp)
 
 	plt.xticks( color = 'k', size = 18)
         plt.yticks( color = 'k', size = 18)
