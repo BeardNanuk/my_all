@@ -8,7 +8,8 @@ ctrl + alt + up/down
 ### quick window switching 
 # in one desktop. Move from one window of a program to another 
 win + Tab 
-
+# switch between tabs within a terminal, 
+Alt + 'tab number' # forexample, Alt + 2
 
 
 

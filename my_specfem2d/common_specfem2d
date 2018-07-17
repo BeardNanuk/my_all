@@ -226,5 +226,6 @@ mpirun -n $NPROC /home/jiazeh/specfem2d/bin/xspecfem2D >> solverz
  
  Reading the parameter file...
 
+### debugging the source time function 
 
-
+vi src/specfem2D/prepare_source_time_function.f90

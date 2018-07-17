@@ -1,4 +1,4 @@
 #!bin/bash
 
-./savesismo ./OUTPUT_FILES/Up_file_single.su -save=./OUTPUT_FILES/zseismo.png -c=90 -xint=2 -yint=30 > /dev/null &
+./savesismo ./OUTPUT_FILES/Up_file_single.su -save=./OUTPUT_FILES/zseismo.png -c=100 -xint=2 -yint=1000 -c=90 > /dev/null &
 
