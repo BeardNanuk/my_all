@@ -285,7 +285,10 @@ WALLTIME=1000 # walltime (unit: minute)  ##$ on cluster, this needs to be change
 # 
 
 
+########### slurmp 
 
+## check your jobs
+squeue -u jiazeh
 
 
 

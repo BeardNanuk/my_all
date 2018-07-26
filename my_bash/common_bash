@@ -305,6 +305,9 @@ cd $final_dir
 # open a folder GUI from bash 
 nautilus .
 
+# open pdf
+xdg-open foo.pdf
+
 
 ### copy and paste 
 mv gittest/* /home/jiazeh/Desktop/my_files/my_github
@@ -417,6 +420,11 @@ $ 1100
 
 ## delete the line part after '#'
 Nevent=$(sed -n 17,19p ./parameters.py | grep 'NSRC' | cut -d\= -f2 | sed 's/\#.*//')
+
+#i greb the total iteration number in the misfit file 
+Nit=`wc -l ./output.stats/misfit | cut -f1 -d' '`
+
+
 
 
 ### file creation - heads 
