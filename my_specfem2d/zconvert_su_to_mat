@@ -13,6 +13,7 @@ from obspy import read
 import matplotlib.pyplot as plt
 from seisflows.tools.graphics import plot_section
 import numpy as np
+import pandas as pd
 import obspy
 import matplotlib.pyplot as plt
 from scipy.interpolate import interp1d
@@ -79,7 +80,6 @@ sensor_array_su.filenamelist = glob.glob(OUTPUT_FILES_path + '/' + "*file_single
 
 
 for f in sensor_array_su.filenamelist:
-    
     fhead=(f[len(OUTPUT_FILES_path)+1:len(OUTPUT_FILES_path)+3])
     print(fhead)
     #relativefiles = './' + OUTPUT_FILES_path + '/' + fhead
@@ -97,15 +97,59 @@ for f in sensor_array_su.filenamelist:
 
     sio.savemat(matfile,adict)
     np.savetxt(txtfile, data, fmt='%20.19f')   # X is an array
+   
+    if fhead=='Ux':
+        print('is'+fhead)
+        Ux_data = np.asarray(data)
+	print(Ux_data.shape)
+    elif fhead=='Uz':
+	print('is'+fhead)
+        Uz_data = np.asarray(data)
+        print(Uz_data.shape)
+
+data_big = np.stack((Ux_data,Uz_data)).transpose(1,0,2)
 
 
+	#U_data = np.concatenate((Ux_data, Uz_data), axis=1)
+        #print(U_data.shape)
 #data_load = np.loadtxt("OUTPUT_FILES/wcsg.txt")
 #print(type(data_load))
 
+#for i in range(25000):
+#    print(Ux_data[i,1])
+
+RecPos_fn = 'DATA/RecPos_fn_000000.dat'
+RecPos = pd.read_csv(RecPos_fn,header=None)
+RecPosValues=(RecPos.values/0.1).transpose()
+print(RecPosValues.shape)
+
+pd_big = RecPosValues*data_big
+normal_disp = pd_big.sum(1)
+np.savetxt('OUTPUT_FILES/U_norm_disp.txt', normal_disp, fmt='%20.19f')   # X is an array
+
+fig = plt.figure()
+ax = plt.subplot(111)
+ax.imshow(normal_disp)
+ax.set_aspect('auto')
+fig.show()
+fig.savefig('OUTPUT_FILES/norm_disp', format='eps', dpi=1000)
 
 
+#for i in range(450):
+#    #print(RecPosValues[i,:].shape)
+#    for j in range(25000):
+#        #print(Ux_data[j,i])
+#        row_one_step=np.append([Ux_data[j,i]], [Uz_data[j,i]],axis=0)
+#	#print(row_one_step)
+#	dp2[[j,i]] = np.dot(row_one_step,RecPosValues[i,:].T)
+#
+##print(dp2)
+#np.savetxt('dp2', dp2, fmt='%20.19f')   # X is an array
 
+#plot_section(dp2,
+             #cmap=args.cmap,
+             #clip=(100-args.clip),
+             #title=args.title,
+             #x_interval=args.x_interval,
+             #y_interval=args.y_interval)
 
-
-
-d=(f[len(OUTPUT_FILES_path)+1:len(OUTPUT_FILES_path)+3])
